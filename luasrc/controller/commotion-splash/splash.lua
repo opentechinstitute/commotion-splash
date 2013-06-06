@@ -222,8 +222,8 @@ ${whitelist}
     if not nixio.fs.writefile("/etc/nodogsplash/nodogsplash.conf",new_conf) then
       DIE("splash: failed to write nodogsplash.conf")
     end
-    luci.sys.exec("/etc/init.d/nodogsplash stop; sleep 5; /etc/init.d/nodogsplash start")
     
     luci.http.redirect(".")
+    luci.sys.exec("/etc/init.d/nodogsplash stop; sleep 5; /etc/init.d/nodogsplash start")
   end
 end
