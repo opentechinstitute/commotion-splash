@@ -171,6 +171,7 @@ FirewallRuleSet preauthenticated-users {
   FirewallRule allow to 102.0.0.0/8
   FirewallRule allow to 103.0.0.0/8
   FirewallRule allow to 5.0.0.0/8
+  FirewallRule allow to 192.168.1.20
   ${ipaddrs}
 }
 
