@@ -1,0 +1,13 @@
+--- nodogsplash	2013-06-12 16:21:53.826414522 -0400
++++ nodogsplash.new	2013-06-12 16:21:53.838414522 -0400
+@@ -28,6 +28,10 @@
+     	else
+ 		if test_module && $WD_DIR/nodogsplash $OPTIONS; then
+ 			echo "OK: nodogsplash started"
++			# create dns-spoofing instance of dnsmasq
++			if /usr/sbin/dnsmasq -p 5353 --address=/#/1.2.3.4; then
++				echo "OK: started dnsmasq on 5353"
++			fi
+ 		else
+ 			echo "FAILED:  nodogsplash exited with non 0 status"
+ 		fi

@@ -26,9 +26,9 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
 	  </div>
 	</div>
 	<div class="cbi-value" id="cbi-commotion-splash-general-redirect">
-	  <label class="cbi-value-title" for="cbid-commotion-splash-redirect">Redirect to Homepage?</label>
+	  <label class="cbi-value-title" for="cbid.commotion-splash.redirect">Redirect to Homepage?</label>
 	  <div class="cbi-value-field">
-	    <input type="checkbox" class="cbi-input-text" name="cbid-commotion-splash-redirect" id="cbid-commotion-splash-redirect" value="1" <% if splash.redirect == 1 then %>checked<% end %>/><br />
+	    <input type="checkbox" class="cbi-input-text" name="cbid.commotion-splash.redirect" id="cbid.commotion-splash.redirect" value="1" <% if splash.redirect == 1 then %>checked<% end %>/><br />
 	    <div class="cbi-value-description">
 	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
 		If this is checked, clients will be redirected to your homepage, instead of to their original request.
@@ -36,9 +36,9 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
 	  </div>
 	</div>
 	<div class="cbi-value" id="cbi-commotion-splash-general-redirecturl">
-	  <label class="cbi-value-title" for="cbid-commotion-splash-redirecturl">Homepage</label>
+	  <label class="cbi-value-title" for="cbid.commotion-splash.redirecturl">Homepage</label>
 	  <div class="cbi-value-field">
-	    <input type="text" class="cbi-input-text" name="cbid-commotion-splash-redirecturl" id="cbid-commotion-splash-redirecturl" value="<%=splash.redirecturl%>" /><br />
+	    <input type="text" class="cbi-input-text" name="cbid.commotion-splash.redirecturl" id="cbid.commotion-splash.redirecturl" value="<%=splash.redirecturl%>" /><br />
 	    <div class="cbi-value-description">
 	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
 		After authentication, clients will be redirected to this URL instead of to their original request.
@@ -185,15 +185,5 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
   <input class="cbi-button cbi-button-reset" type="reset" value="Reset" />
 </div>
 </form>
-
-<script src="<%=media%>/zepto.min.js"></script>
-<script type="text/javascript">
-Zepto(function($){
-  $('#cbi-commotion-splash-general-redirecturl').hide();
-  $('#cbid-commotion-splash-redirect').on('click',function(e) {
-    $('#cbi-commotion-splash-general-redirecturl').toggle($('#cbid-commotion-splash-redirect').prop('checked'));
-  });
-});
-</script>
 
 <%+footer%>
