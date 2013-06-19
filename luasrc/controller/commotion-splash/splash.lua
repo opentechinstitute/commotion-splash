@@ -73,8 +73,8 @@ function config_submit()
   local list = list_ifaces()
   local settings = {
     leasetime = luci.http.formvalue("cbid.commotion-splash.leasetime"),
-    redirect = luci.http.formvalue("cbid.commotion-splash.redirect"),
-    redirecturl = luci.http.formvalue("cbid.commotion-splash.redirecturl"),
+    redirect = luci.http.formvalue("cbid-commotion-splash-redirect"),
+    redirecturl = luci.http.formvalue("cbid-commotion-splash-redirecturl"),
     autoauth = luci.http.formvalue("cbid.commotion-splash.autoauth"),
   }
   local range

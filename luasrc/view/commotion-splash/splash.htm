@@ -9,6 +9,8 @@
    newredir = newredir:gsub(":","#3A"):gsub("/","#2F"):gsub("#","%%")
 %>
 
+<div style="width:100%">
+
 <div style="width:49%;display:inline-block;text-align:center" id="local">
  <a href="<%=server .. splash .. 'redir=' .. newredir .. '%2Fapps&' .. tok%>">
   <img src="<%=media%>/apps.128.png" alt="Local Applications" title="Local Applications" />
@@ -21,6 +23,8 @@
   <img src="<%=media%>/internet.128.png" alt="Internet" title="Internet" />
   <p>Internet</p>
  </a>
+</div>
+
 </div>
 
 <%+footer%>
