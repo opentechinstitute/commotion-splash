@@ -4,4 +4,10 @@
 mv -f /usr/share/commotion/files/splash.html /etc/nodogsplash/htdocs/splash.html
 }
 
+[ -f "/usr/bin/patch" ] && { \
+  cd /etc/init.d
+  patch -p0 < /usr/share/commotion/patches/dnsmasq-splash.patch
+  patch -p0 < /usr/share/commotion/patches/nodogsplash.patch
+}
+
 exit 0

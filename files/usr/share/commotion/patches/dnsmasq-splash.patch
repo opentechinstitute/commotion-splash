@@ -1,0 +1,26 @@
+--- dnsmasq	2013-06-12 16:22:05.106413981 -0400
++++ dnsmasq.new	2013-06-12 16:22:05.130413980 -0400
+@@ -461,6 +461,7 @@
+ }
+ 
+ start() {
++	. /lib/functions/commotion.sh
+ 	include /lib/network
+ 	scan_interfaces
+ 
+@@ -507,7 +508,14 @@
+ 		dhcp_domain_add "" "${hostname:-OpenWrt}" "$lanaddr"
+ 	}
+ 
+-	service_start /usr/sbin/dnsmasq -C $CONFIGFILE && {
++	local plug_ip=$(ubus call network.interface.plug status \
++		|grep -E "^$(echo -ne \\t)\"ipv4-address\"" -A 2 \
++		|tail -1 \
++		|grep -o -E "[0-9.]*")
++	
++	local co_dns=$(commotion_get_dns eth0)
++	
++	service_start /usr/sbin/dnsmasq -C $CONFIGFILE --server=/#/$co_dns --server=/#/${plug_ip}#5353 && {
+ 		rm -f /tmp/resolv.conf
+ 		[ $ADD_LOCAL_DOMAIN -eq 1 ] && [ -n "$DOMAIN" ] && {
+ 			echo "search $DOMAIN" >> /tmp/resolv.conf

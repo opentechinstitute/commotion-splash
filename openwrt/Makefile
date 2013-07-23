@@ -7,11 +7,11 @@ THEME_NAME:=commotion
 THEME_TITLE:=Commotion
 
 PKG_NAME:=$(MODULE_NAME)
-PKG_VERSION:=master
+PKG_VERSION:=1.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git://github.com/danstaples/commotion-splash.git
+PKG_SOURCE_URL:=git://github.com/opentechinstitute/commotion-splash.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
@@ -43,6 +43,8 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_BUILD_DIR)/luasrc/* $(1)/usr/lib/lua/luci/
 	$(INSTALL_DIR) $(1)/usr/share/commotion/files
 	$(CP) $(PKG_BUILD_DIR)/files/usr/share/commotion/files/splash.html $(1)/usr/share/commotion/files/
+	$(INSTALL_DIR) $(1)/usr/share/commotion/patches
+	$(CP) $(PKG_BUILD_DIR)/files/usr/share/commotion/patches/* $(1)/usr/share/commotion/patches/
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/etc/uci-defaults/commotion-splash $(1)/etc/uci-defaults/
 	$(INSTALL_DIR) $(1)/www/luci-static/commotion
