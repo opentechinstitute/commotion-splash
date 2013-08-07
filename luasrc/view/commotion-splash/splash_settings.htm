@@ -7,51 +7,51 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
 <form method="post" action="<%=controller%>/admin/services/splash/submit">
   <div><script type="text/javascript" src="/luci-static/resources/cbi.js"></script></div>
   <div class="cbi-map" id="cbi-commotion-splash">
-    <h2><a id="content" name="content">Captive Portal</a></h2>
-    <div class="cbi-map-descr">Nodogsplash offers a simple way to provide restricted access to an internet connection.</div>
+    <h2><a id="content" name="content"><%:Captive Portal%></a></h2>
+    <div class="cbi-map-descr"><%:Nodogsplash offers a simple way to provide restricted access to an internet connection.%></div>
     <% if err and err.notice ~= "" then %><div class="notice"><%=err.notice%></div><% end %>
     
     <fieldset class="cbi-section" id="cbi-commotion-splash-general">
-      <legend>General</legend>
+      <legend><%:General%></legend>
       <div class="cbi-section-node" id="cbi-commotion-splash-general">
 	<div class="cbi-value" id="cbi-commotion-splash-general-leasetime">
-	  <label class="cbi-value-title" for="cbid.commotion-splash.leasetime">Clearance time</label>
+	  <label class="cbi-value-title" for="cbid.commotion-splash.leasetime"><%:Clearance time%></label>
 	  <div class="cbi-value-field">
 	    <input type="text" class="cbi-input-text" name="cbid.commotion-splash.leasetime" id="cbid.commotion-splash.leasetime" value="<%=splash.leasetime%>" /><br />
 	    <%if err then%><div class="error"><%=err.leasetime%></div><%end%>
 	    <div class="cbi-value-description">
 	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
-		Clients that have accepted the captive portal are allowed to use the network for that many minutes.
+		<%:Clients that have accepted the captive portal are allowed to use the network for that many minutes.%>
 	    </div>
 	  </div>
 	</div>
 	<div class="cbi-value" id="cbi-commotion-splash-general-redirect">
-	  <label class="cbi-value-title" for="cbid-commotion-splash-redirect">Redirect to Homepage?</label>
+	  <label class="cbi-value-title" for="cbid-commotion-splash-redirect"><%:Redirect to Homepage?%></label>
 	  <div class="cbi-value-field">
 	    <input type="checkbox" class="cbi-input-text" name="cbid-commotion-splash-redirect" id="cbid-commotion-splash-redirect" value="1" <% if splash.redirect == 1 then %>checked<% end %>/><br />
 	    <div class="cbi-value-description">
-	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
-		If this is checked, clients will be redirected to your homepage, instead of to their original request.
+	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="<%:help%>" /></span>
+		<%:If this is checked, clients will be redirected to your homepage, instead of to their original request.%>
 	    </div>
 	  </div>
 	</div>
 	<div class="cbi-value" id="cbi-commotion-splash-general-redirecturl">
-	  <label class="cbi-value-title" for="cbid-commotion-splash-redirecturl">Homepage</label>
+	  <label class="cbi-value-title" for="cbid-commotion-splash-redirecturl"><%:Homepage%></label>
 	  <div class="cbi-value-field">
 	    <input type="text" class="cbi-input-text" name="cbid-commotion-splash-redirecturl" id="cbid-commotion-splash-redirecturl" value="<%=splash.redirecturl%>" /><br />
 	    <div class="cbi-value-description">
-	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
-		After authentication, clients will be redirected to this URL instead of to their original request.
+	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="<%:help%>" /></span>
+		<%:After authentication, clients will be redirected to this URL instead of to their original request.%>
 	    </div>
 	  </div>
 	</div>
 	<div class="cbi-value" id="cbi-commotion-splash-general-autoauth">
-	  <label class="cbi-value-title" for="cbid.commotion-splash.autoauth">Immediately Authenticate?</label>
+	  <label class="cbi-value-title" for="cbid.commotion-splash.autoauth"><%:Immediately Authenticate?%></label>
 	  <div class="cbi-value-field">
 	    <input type="checkbox" class="cbi-input-text" name="cbid.commotion-splash.autoauth" id="cbid.commotion-splash.autoauth" value="1" <% if splash.autoauth == 1 then %>checked<% end %>/><br />
 	    <div class="cbi-value-description">
-	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="help" /></span>
-		If this is checked, clients will be immediately directed to their original request or your homepage (if set above), instead of being served a splash page.
+	      <span class="cbi-value-helpicon"><img src="/luci-static/resources/cbi/help.gif" alt="<%:help%>" /></span>
+		<%:If this is checked, clients will be immediately directed to their original request or your homepage (if set above), instead of being served a splash page.%>
 	    </div>
 	  </div>
 	</div>
@@ -61,14 +61,14 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
 <!-- /nsection -->
 <!-- tblsection -->
 <fieldset class="cbi-section" id="cbi-commotion-splash-ifaces">
-  <legend>Interfaces</legend><div class="cbi-section-descr">Interfaces that are used for Splash.</div>
+  <legend><%:Interfaces%></legend><div class="cbi-section-descr"><%:Interfaces that are used for Splash.%></div>
   <div class="cbi-section-node">
     <table class="cbi-section-table">
       <tr class="cbi-section-table-titles">
-        <th class="cbi-section-table-cell">Network</th>
+        <th class="cbi-section-table-cell"><%:Network%></th>
       </tr>
       <tr class="cbi-section-table-descr">
-        <th class="cbi-section-table-cell">Intercept client traffic on this Interface</th>
+        <th class="cbi-section-table-cell"><%:Intercept client traffic on this Interface%></th>
       </tr>
       <tr class="cbi-section-table-row">
         <td class="cbi-value-field">
@@ -92,12 +92,12 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
 </fieldset>
 <!-- /tblsection --><!-- tblsection -->
 <fieldset class="cbi-section" id="cbi-commotion-splash-whitelist">
-  <legend>Whitelist</legend>
-  <div class="cbi-section-descr">MAC addresses of whitelisted clients. These do not need to accept the splash and are not bandwidth limited.</div>
+  <legend><%:Whitelist%></legend>
+  <div class="cbi-section-descr"><%:MAC addresses of whitelisted clients. These do not need to accept the splash and are not bandwidth limited.%></div>
   <div class="cbi-section-node">
     <table class="cbi-section-table">
       <tr class="cbi-section-table-titles">
-        <th class="cbi-section-table-cell">MAC Address</th>
+        <th class="cbi-section-table-cell"><%:MAC Address%></th>
       </tr>
       <tr class="cbi-section-table-descr">
         <th class="cbi-section-table-cell"></th>
@@ -121,12 +121,12 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
 </fieldset>
 <!-- /tblsection --><!-- tblsection -->
 <fieldset class="cbi-section" id="cbi-commotion-splash-blacklist">
-  <legend>Blacklist</legend>
-  <div class="cbi-section-descr">MAC addresses in this list are blocked.</div>
+  <legend><%:Blacklist%></legend>
+  <div class="cbi-section-descr"><%:MAC addresses in this list are blocked.%></div>
   <div class="cbi-section-node">
     <table class="cbi-section-table">
       <tr class="cbi-section-table-titles">
-        <th class="cbi-section-table-cell">MAC Address</th>
+        <th class="cbi-section-table-cell"><%:MAC Address%></th>
       </tr>
       <tr class="cbi-section-table-descr">
         <th class="cbi-section-table-cell"></th>
@@ -150,15 +150,15 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
 </fieldset>
 <!-- /tblsection --><!-- tblsection -->
 <fieldset class="cbi-section" id="cbi-commotion-splash-ipaddrs">
-  <legend>Allowed hosts/subnets</legend>
-  <div class="cbi-section-descr">Hosts and Networks that are listed here are excluded from splashing, i.e. they are always allowed.</div>
+  <legend><%:Allowed hosts/subnets%></legend>
+  <div class="cbi-section-descr"><%:Hosts and Networks that are listed here are excluded from splashing, i.e. they are always allowed.%></div>
   <div class="cbi-section-node">
     <table class="cbi-section-table">
       <tr class="cbi-section-table-titles">
-        <th class="cbi-section-table-cell">IP Address</th>
+        <th class="cbi-section-table-cell"><%:IP Address%></th>
       </tr>
       <tr class="cbi-section-table-descr">
-	<th class="cbi-section-table-cell">CIDR notation optional (e.g. 192.168.1.0/24)</th>
+	<th class="cbi-section-table-cell"><%:CIDR notation optional (e.g. 192.168.1.0/24)%></th>
       </tr>
       <tr class="cbi-section-table-row">
         <td class="cbi-value-field">
@@ -181,8 +181,8 @@ table.cbi-section-table input, table.cbi-section-table textarea, table.cbi-secti
 	<br />
 </div>
 <div class="cbi-page-actions">		
-  <input class="cbi-button cbi-button-save" type="submit" value="Submit" />
-  <input class="cbi-button cbi-button-reset" type="reset" value="Reset" />
+  <input class="cbi-button cbi-button-save" type="submit" value="<%:Submit%>" />
+  <input class="cbi-button cbi-button-reset" type="reset" value="<%:Reset%>" />
 </div>
 </form>
 

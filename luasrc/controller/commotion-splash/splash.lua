@@ -85,18 +85,18 @@ function config_submit()
     elseif type(luci.http.formvalue("cbid.commotion-splash." .. opt)) == "table" then
       settings[opt] = luci.http.formvalue("cbid.commotion-splash." .. opt)
     else
-      DIE("splash: invalid parameters")
+      DIE(translate("splash: invalid parameters"))
       return
     end
   end
   
   --input validation and sanitization
   if (not settings.leasetime or settings.leasetime == '' or not is_uint(settings.leasetime)) then
-    error_info.leasetime = "Clearance time must be an integer greater than zero"
+    error_info.leasetime = translate("Clearance time must be an integer greater than zero")
   end
   
   if settings.redirect and settings.redirect ~= "1" then
-    DIE("Invalid redirect")
+    DIE(translate("Invalid redirect"))
     return
   end
   
@@ -105,26 +105,26 @@ function config_submit()
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
-    DIE("Invalid autoauth")
+    DIE(translate("Invalid autoauth"))
     return
   end
   
   for _, selected_zone in pairs(settings.selected_zones) do
     if selected_zone and selected_zone ~= "" and not list.zone_to_iface[selected_zone] then
-      DIE("Invalid submission...zone " .. selected_zone .. " doesn't exist")
+      DIE(translate("Invalid submission...zone ") .. selected_zone .. translate(" doesn't exist"))
       return
     end
   end
   
   for _, mac in pairs(settings.whitelist) do
     if mac and mac ~= "" and not is_macaddr(mac) then
-      error_info.whitelist = "Whitelist entries must be a valid MAC address"
+      error_info.whitelist = translate("Whitelist entries must be a valid MAC address")
     end
   end
   
   for _, mac in pairs(settings.blacklist) do
     if mac and mac ~= "" and not is_macaddr(mac) then
-      error_info.blacklist = "Blacklist entries must be a valid MAC address"
+      error_info.blacklist = translate("Blacklist entries must be a valid MAC address")
     end
   end
   
@@ -132,7 +132,7 @@ function config_submit()
     if ipaddr and ipaddr ~= "" and is_ip4addr_cidr(ipaddr) then
       range = true
     elseif ipaddr and ipaddr ~= "" and not is_ip4addr(ipaddr) then
-      error_info.ipaddrs = "Entry must be a valid IPv4 address or address range in CIDR notation"
+      error_info.ipaddrs = translate("Entry must be a valid IPv4 address or address range in CIDR notation")
     end
   end
   
@@ -143,7 +143,7 @@ function config_submit()
     for zone, iface in pairs(list.zone_to_iface) do
       table.insert(settings.zones,zone)
     end
-    error_info.notice = "Invalid entries. Please review the fields below."
+    error_info.notice = translate("Invalid entries. Please review the fields below.")
     config_splash(error_info, settings)
     return
   else
