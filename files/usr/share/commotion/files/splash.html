@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
-    <title>Redirecting...</title>
+    <title><%:Redirecting...%></title>
     <script type="text/javascript">
       var auth = "$authtarget";
       var reg = /^(http:\/\/[.\w]+)[:\d]*\/.*(\?.+)/.exec(auth);
@@ -11,11 +11,11 @@
     </script>
   </head>
   <body>
-   <p>You are being redirected to the captive portal...</p>
+   <p><%:You are being redirected to the captive portal...%></p>
    <form method="get" action="$authtarget">
     <input type='hidden' name='tok' value='$tok'>
     <input type='hidden' name='redir' value='$redir'>
-    <input type="submit" value="Click here if your browser doesn't automatically redirect you" />
+    <input type="submit" value="<%:Click here if your browser doesn't automatically redirect you%>" />
    </form>
   </body>
 </html>
