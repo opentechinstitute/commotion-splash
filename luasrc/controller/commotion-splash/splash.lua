@@ -10,7 +10,7 @@ function index()
 	entry({"admin", "services", "splash"}, call("config_splash"), _("Captive Portal"), 90).dependent=true
 	entry({"admin", "services", "splash", "splashtext" }, form("commotion-splash/splashtext"), _("Splashtext"), 10).dependent=true
 	entry({"admin", "services", "splash", "submit" }, call("config_submit")).dependent=true
-	entry({"commotion","splash"}, template("commotion-splash/splash"))
+	entry({"commotion","splash"}, template("commotion-splash/splash")).dependent=false
 end
 
 function config_splash(error_info, bad_settings)
