@@ -15,7 +15,7 @@ end
 
 function config_splash(error_info, bad_settings)
   local splash
-  
+  local encode = require "luci.commotion.encode"
   -- get settings
   if bad_settings then
     splash = bad_settings
@@ -33,7 +33,7 @@ function config_splash(error_info, bad_settings)
     end
   
     -- get redirect
-    splash.redirecturl = html_encode(luci.sys.exec("grep -o -E '^RedirectURL .*' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2"):sub(0,-2))
+    splash.redirecturl = encode.html(luci.sys.exec("grep -o -E '^RedirectURL .*' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2"):sub(0,-2))
     splash.redirect = splash.redirecturl ~= '' and 1 or 0
     
     -- get autoauth
@@ -41,25 +41,25 @@ function config_splash(error_info, bad_settings)
     splash.autoauth = (auth == "yes" or auth == "true" or auth == "1") and 1 or 0
     
     -- get splash.leasetime
-    splash.leasetime = html_encode(luci.sys.exec("grep -o -E '^ClientIdleTimeout [[:digit:]]+' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2"):sub(0,-2))
+    splash.leasetime = encode.html(luci.sys.exec("grep -o -E '^ClientIdleTimeout [[:digit:]]+' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2"):sub(0,-2))
   
     -- get whitelist, blacklist, ipaddrs
     local whitelist_str = luci.sys.exec("grep -o -E '^TrustedMACList .*' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2")
     for mac in whitelist_str:gmatch("%x%x:%x%x:%x%x:%x%x:%x%x:%x%x") do
-      mac = html_encode(mac)
+      mac = encode.html(mac)
       table.insert(splash.whitelist,mac)
     end
     
     local blacklist_str = luci.sys.exec("grep -o -E '^BlockedMACList .*' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2")
     for mac in blacklist_str:gmatch("%x%x:%x%x:%x%x:%x%x:%x%x:%x%x") do
-      mac = html_encode(mac)
+      mac = encode.html(mac)
       table.insert(splash.blacklist,mac)
     end
     
     local ipaddrs_str = luci.sys.exec("grep -o -E '^[^#]*FirewallRule allow from .* #FirewallRule preauthenticated-users' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 4")
     for ipaddr in ipaddrs_str:gmatch("[^%s]+") do
       log(ipaddr)
-      ipaddr = html_encode(ipaddr)
+      ipaddr = encode.html(ipaddr)
       table.insert(splash.ipaddrs,ipaddr)
     end
     
