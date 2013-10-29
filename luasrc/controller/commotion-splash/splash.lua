@@ -71,6 +71,7 @@ end
 function config_submit()
   local error_info = {}
   local list = list_ifaces()
+  local dispatch = require "luci.dispatcher"
   local settings = {
     leasetime = luci.http.formvalue("cbid.commotion-splash.leasetime"),
     redirect = luci.http.formvalue("cbid-commotion-splash-redirect"),
@@ -85,7 +86,7 @@ function config_submit()
     elseif type(luci.http.formvalue("cbid.commotion-splash." .. opt)) == "table" then
       settings[opt] = luci.http.formvalue("cbid.commotion-splash." .. opt)
     else
-      DIE(translate("splash: invalid parameters"))
+      dispatch.error500(translate("splash: invalid parameters"))
       return
     end
   end
@@ -96,7 +97,7 @@ function config_submit()
   end
   
   if settings.redirect and settings.redirect ~= "1" then
-    DIE(translate("Invalid redirect"))
+    dispatch.error500(translate("Invalid redirect"))
     return
   end
   
@@ -105,13 +106,13 @@ function config_submit()
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
-    DIE(translate("Invalid autoauth"))
+    dispatch.error500(translate("Invalid autoauth"))
     return
   end
   
   for _, selected_zone in pairs(settings.selected_zones) do
     if selected_zone and selected_zone ~= "" and not list.zone_to_iface[selected_zone] then
-      DIE(translate("Invalid submission...zone ") .. selected_zone .. translate(" doesn't exist"))
+      dispatch.error500(translate("Invalid submission...zone ") .. selected_zone .. translate(" doesn't exist"))
       return
     end
   end
@@ -221,7 +222,7 @@ ${whitelist}
     
     local new_conf = printf(new_conf_tmpl, options)
     if not nixio.fs.writefile("/etc/nodogsplash/nodogsplash.conf",new_conf) then
-      DIE("splash: failed to write nodogsplash.conf")
+      dispatch.error500("splash: failed to write nodogsplash.conf")
     end
     
     luci.http.redirect(".")
