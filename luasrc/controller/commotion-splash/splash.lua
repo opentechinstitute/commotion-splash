@@ -71,6 +71,7 @@ end
 function config_submit()
   local error_info = {}
   local list = list_ifaces()
+  local encode = require "luci.commotion.encode"
   local dispatch = require "luci.dispatcher"
   local settings = {
     leasetime = luci.http.formvalue("cbid.commotion-splash.leasetime"),
@@ -102,7 +103,7 @@ function config_submit()
   end
   
   if settings.redirecturl and settings.redirecturl ~= '' then
-    settings.redirecturl = url_encode(settings.redirecturl)
+    settings.redirecturl = encode.url(settings.redirecturl)
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
