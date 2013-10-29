@@ -72,6 +72,7 @@ function config_submit()
   local error_info = {}
   local list = list_ifaces()
   local encode = require "luci.commotion.encode"
+  local cutil = require "luci.commotion.util"
   local dispatch = require "luci.dispatcher"
   local settings = {
     leasetime = luci.http.formvalue("cbid.commotion-splash.leasetime"),
@@ -195,13 +196,13 @@ ${whitelist}
     
     for _, selected_zone in pairs(settings.selected_zones) do
       if selected_zone and selected_zone ~= '' then
-        options.gw_ifaces = options.gw_ifaces .. printf(gw_iface, {iface=list.zone_to_iface[selected_zone]}) .. "\n"
+        options.gw_ifaces = options.gw_ifaces .. cutil.tprintf(gw_iface, {iface=list.zone_to_iface[selected_zone]}) .. "\n"
       end
     end
     
     for _, ip_cidr in pairs(settings.ipaddrs) do
       if ip_cidr and ip_cidr ~= '' then
-	options.ipaddrs = options.ipaddrs .. printf(ipaddr, {ip_cidr=ip_cidr}) .. "\n"
+	options.ipaddrs = options.ipaddrs .. cutil.tprintf(ipaddr, {ip_cidr=ip_cidr}) .. "\n"
       end
     end
     
@@ -221,7 +222,7 @@ ${whitelist}
     end
     if options.blacklist ~= '' then options.blacklist = "BlockedMACList " .. options.blacklist end
     
-    local new_conf = printf(new_conf_tmpl, options)
+    local new_conf = cutil.tprintf(new_conf_tmpl, options)
     if not nixio.fs.writefile("/etc/nodogsplash/nodogsplash.conf",new_conf) then
       dispatch.error500("splash: failed to write nodogsplash.conf")
     end
