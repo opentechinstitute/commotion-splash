@@ -95,7 +95,7 @@ function config_submit()
   end
   
   --input validation and sanitization
-  if (not settings.leasetime or settings.leasetime == '' or not is_uint(settings.leasetime)) then
+  if (not settings.leasetime or settings.leasetime == '' or not id.is_uint(settings.leasetime)) then
     error_info.leasetime = translate("Clearance time must be an integer greater than zero")
   end
   
