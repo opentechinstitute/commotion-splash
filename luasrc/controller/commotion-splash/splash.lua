@@ -3,7 +3,6 @@ module("luci.controller.commotion-splash.splash", package.seeall)
 require "luci.sys"
 require "luci.http"
 require "luci.model.uci"
-require "commotion_helpers"
 require "nixio.fs"
 
 function index()
@@ -15,6 +14,7 @@ end
 
 function config_splash(error_info, bad_settings)
   local splash
+  local debug = require "luci.commotion.debugger"
   local encode = require "luci.commotion.encode"
   -- get settings
   if bad_settings then
@@ -58,7 +58,7 @@ function config_splash(error_info, bad_settings)
     
     local ipaddrs_str = luci.sys.exec("grep -o -E '^[^#]*FirewallRule allow from .* #FirewallRule preauthenticated-users' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 4")
     for ipaddr in ipaddrs_str:gmatch("[^%s]+") do
-      log(ipaddr)
+      debug.log(ipaddr)
       ipaddr = encode.html(ipaddr)
       table.insert(splash.ipaddrs,ipaddr)
     end
