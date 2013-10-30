@@ -133,7 +133,7 @@ function config_submit()
   end
   
   for _, ipaddr in pairs(settings.ipaddrs) do
-    if ipaddr and ipaddr ~= "" and is_ip4addr_cidr(ipaddr) then
+    if ipaddr and ipaddr ~= "" and id.is_ip4addr_cidr(ipaddr) then
       range = true
     elseif ipaddr and ipaddr ~= "" and not id.is_ip4addr(ipaddr) then
       error_info.ipaddrs = translate("Entry must be a valid IPv4 address or address range in CIDR notation")
