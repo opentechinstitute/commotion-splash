@@ -121,13 +121,13 @@ function config_submit()
   end
   
   for _, mac in pairs(settings.whitelist) do
-    if mac and mac ~= "" and not is_macaddr(mac) then
+    if mac and mac ~= "" and not id.is_macaddr(mac) then
       error_info.whitelist = translate("Whitelist entries must be a valid MAC address")
     end
   end
   
   for _, mac in pairs(settings.blacklist) do
-    if mac and mac ~= "" and not is_macaddr(mac) then
+    if mac and mac ~= "" and not id.is_macaddr(mac) then
       error_info.blacklist = translate("Blacklist entries must be a valid MAC address")
     end
   end
