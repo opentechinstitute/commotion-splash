@@ -16,12 +16,13 @@ function config_splash(error_info, bad_settings)
   local splash
   local debug = require "luci.commotion.debugger"
   local encode = require "luci.commotion.encode"
+  local ntwrk = require "luci.commotion.network"
   -- get settings
   if bad_settings then
     splash = bad_settings
   else
     local current_ifaces = luci.sys.exec("grep '^GatewayInterface' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2")
-    local list = list_ifaces()
+    local list = ntwrk.list_ifaces()
     splash = {zones={}, selected_zones={}, whitelist={}, blacklist={}, ipaddrs={}}
     
     -- get current zone(s) set in nodogsplash --> splash.zone_selected
@@ -70,7 +71,8 @@ end
 
 function config_submit()
   local error_info = {}
-  local list = list_ifaces()
+  local ntwrk = require "luci.commotion.network"
+  local list = ntwrk.list_ifaces()
   local encode = require "luci.commotion.encode"
   local cutil = require "luci.commotion.util"
   local id = require "luci.commotion.identify"
@@ -142,7 +144,7 @@ function config_submit()
   
   --finish
   if next(error_info) then
-    local list = list_ifaces()
+    local list = ntwrk.list_ifaces()
     settings.zones={}
     for zone, iface in pairs(list.zone_to_iface) do
       table.insert(settings.zones,zone)
