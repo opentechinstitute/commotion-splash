@@ -73,6 +73,7 @@ function config_submit()
   local list = list_ifaces()
   local encode = require "luci.commotion.encode"
   local cutil = require "luci.commotion.util"
+  local id = require "luci.commotion.identify"
   local dispatch = require "luci.dispatcher"
   local settings = {
     leasetime = luci.http.formvalue("cbid.commotion-splash.leasetime"),
@@ -134,7 +135,7 @@ function config_submit()
   for _, ipaddr in pairs(settings.ipaddrs) do
     if ipaddr and ipaddr ~= "" and is_ip4addr_cidr(ipaddr) then
       range = true
-    elseif ipaddr and ipaddr ~= "" and not is_ip4addr(ipaddr) then
+    elseif ipaddr and ipaddr ~= "" and not id.is_ip4addr(ipaddr) then
       error_info.ipaddrs = translate("Entry must be a valid IPv4 address or address range in CIDR notation")
     end
   end
