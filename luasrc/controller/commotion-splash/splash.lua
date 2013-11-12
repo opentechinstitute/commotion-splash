@@ -4,6 +4,7 @@ require "luci.sys"
 require "luci.http"
 require "luci.model.uci"
 require "nixio.fs"
+require "luci.i18n"
 
 function index()
 	entry({"admin", "services", "splash"}, call("config_splash"), _("Captive Portal"), 90).dependent=true
