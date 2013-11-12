@@ -3,8 +3,8 @@ module("luci.controller.commotion-splash.splash", package.seeall)
 require "luci.sys"
 require "luci.http"
 require "luci.model.uci"
-require "commotion_helpers"
 require "nixio.fs"
+require "luci.i18n"
 
 function index()
 	entry({"admin", "services", "splash"}, call("config_splash"), _("Captive Portal"), 90).dependent=true
@@ -15,13 +15,15 @@ end
 
 function config_splash(error_info, bad_settings)
   local splash
-  
+  local debug = require "luci.commotion.debugger"
+  local encode = require "luci.commotion.encode"
+  local ntwrk = require "luci.commotion.network"
   -- get settings
   if bad_settings then
     splash = bad_settings
   else
     local current_ifaces = luci.sys.exec("grep '^GatewayInterface' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2")
-    local list = list_ifaces()
+    local list = ntwrk.list_ifaces()
     splash = {zones={}, selected_zones={}, whitelist={}, blacklist={}, ipaddrs={}}
     
     -- get current zone(s) set in nodogsplash --> splash.zone_selected
@@ -33,7 +35,7 @@ function config_splash(error_info, bad_settings)
     end
   
     -- get redirect
-    splash.redirecturl = html_encode(luci.sys.exec("grep -o -E '^RedirectURL .*' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2"):sub(0,-2))
+    splash.redirecturl = encode.html(luci.sys.exec("grep -o -E '^RedirectURL .*' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2"):sub(0,-2))
     splash.redirect = splash.redirecturl ~= '' and 1 or 0
     
     -- get autoauth
@@ -41,25 +43,25 @@ function config_splash(error_info, bad_settings)
     splash.autoauth = (auth == "yes" or auth == "true" or auth == "1") and 1 or 0
     
     -- get splash.leasetime
-    splash.leasetime = html_encode(luci.sys.exec("grep -o -E '^ClientIdleTimeout [[:digit:]]+' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2"):sub(0,-2))
+    splash.leasetime = encode.html(luci.sys.exec("grep -o -E '^ClientIdleTimeout [[:digit:]]+' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2"):sub(0,-2))
   
     -- get whitelist, blacklist, ipaddrs
     local whitelist_str = luci.sys.exec("grep -o -E '^TrustedMACList .*' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2")
     for mac in whitelist_str:gmatch("%x%x:%x%x:%x%x:%x%x:%x%x:%x%x") do
-      mac = html_encode(mac)
+      mac = encode.html(mac)
       table.insert(splash.whitelist,mac)
     end
     
     local blacklist_str = luci.sys.exec("grep -o -E '^BlockedMACList .*' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 2")
     for mac in blacklist_str:gmatch("%x%x:%x%x:%x%x:%x%x:%x%x:%x%x") do
-      mac = html_encode(mac)
+      mac = encode.html(mac)
       table.insert(splash.blacklist,mac)
     end
     
     local ipaddrs_str = luci.sys.exec("grep -o -E '^[^#]*FirewallRule allow from .* #FirewallRule preauthenticated-users' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 4")
     for ipaddr in ipaddrs_str:gmatch("[^%s]+") do
-      log(ipaddr)
-      ipaddr = html_encode(ipaddr)
+      debug.log(ipaddr)
+      ipaddr = encode.html(ipaddr)
       table.insert(splash.ipaddrs,ipaddr)
     end
     
@@ -70,7 +72,12 @@ end
 
 function config_submit()
   local error_info = {}
-  local list = list_ifaces()
+  local ntwrk = require "luci.commotion.network"
+  local list = ntwrk.list_ifaces()
+  local encode = require "luci.commotion.encode"
+  local cutil = require "luci.commotion.util"
+  local id = require "luci.commotion.identify"
+  local dispatch = require "luci.dispatcher"
   local settings = {
     leasetime = luci.http.formvalue("cbid.commotion-splash.leasetime"),
     redirect = luci.http.formvalue("cbid-commotion-splash-redirect"),
@@ -85,60 +92,60 @@ function config_submit()
     elseif type(luci.http.formvalue("cbid.commotion-splash." .. opt)) == "table" then
       settings[opt] = luci.http.formvalue("cbid.commotion-splash." .. opt)
     else
-      DIE(translate("splash: invalid parameters"))
+      dispatch.error500(translate("splash: invalid parameters"))
       return
     end
   end
   
   --input validation and sanitization
-  if (not settings.leasetime or settings.leasetime == '' or not is_uint(settings.leasetime)) then
+  if (not settings.leasetime or settings.leasetime == '' or not id.is_uint(settings.leasetime)) then
     error_info.leasetime = translate("Clearance time must be an integer greater than zero")
   end
   
   if settings.redirect and settings.redirect ~= "1" then
-    DIE(translate("Invalid redirect"))
+    dispatch.error500(translate("Invalid redirect"))
     return
   end
   
   if settings.redirecturl and settings.redirecturl ~= '' then
-    settings.redirecturl = url_encode(settings.redirecturl)
+    settings.redirecturl = encode.url(settings.redirecturl)
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
-    DIE(translate("Invalid autoauth"))
+    dispatch.error500(translate("Invalid autoauth"))
     return
   end
   
   for _, selected_zone in pairs(settings.selected_zones) do
     if selected_zone and selected_zone ~= "" and not list.zone_to_iface[selected_zone] then
-      DIE(translate("Invalid submission...zone ") .. selected_zone .. translate(" doesn't exist"))
+      dispatch.error500(translate("Invalid submission...zone ") .. selected_zone .. translate(" doesn't exist"))
       return
     end
   end
   
   for _, mac in pairs(settings.whitelist) do
-    if mac and mac ~= "" and not is_macaddr(mac) then
+    if mac and mac ~= "" and not id.is_macaddr(mac) then
       error_info.whitelist = translate("Whitelist entries must be a valid MAC address")
     end
   end
   
   for _, mac in pairs(settings.blacklist) do
-    if mac and mac ~= "" and not is_macaddr(mac) then
+    if mac and mac ~= "" and not id.is_macaddr(mac) then
       error_info.blacklist = translate("Blacklist entries must be a valid MAC address")
     end
   end
   
   for _, ipaddr in pairs(settings.ipaddrs) do
-    if ipaddr and ipaddr ~= "" and is_ip4addr_cidr(ipaddr) then
+    if ipaddr and ipaddr ~= "" and id.is_ip4addr_cidr(ipaddr) then
       range = true
-    elseif ipaddr and ipaddr ~= "" and not is_ip4addr(ipaddr) then
+    elseif ipaddr and ipaddr ~= "" and not id.is_ip4addr(ipaddr) then
       error_info.ipaddrs = translate("Entry must be a valid IPv4 address or address range in CIDR notation")
     end
   end
   
   --finish
   if next(error_info) then
-    local list = list_ifaces()
+    local list = ntwrk.list_ifaces()
     settings.zones={}
     for zone, iface in pairs(list.zone_to_iface) do
       table.insert(settings.zones,zone)
@@ -193,13 +200,13 @@ ${whitelist}
     
     for _, selected_zone in pairs(settings.selected_zones) do
       if selected_zone and selected_zone ~= '' then
-        options.gw_ifaces = options.gw_ifaces .. printf(gw_iface, {iface=list.zone_to_iface[selected_zone]}) .. "\n"
+        options.gw_ifaces = options.gw_ifaces .. cutil.tprintf(gw_iface, {iface=list.zone_to_iface[selected_zone]}) .. "\n"
       end
     end
     
     for _, ip_cidr in pairs(settings.ipaddrs) do
       if ip_cidr and ip_cidr ~= '' then
-	options.ipaddrs = options.ipaddrs .. printf(ipaddr, {ip_cidr=ip_cidr}) .. "\n"
+	options.ipaddrs = options.ipaddrs .. cutil.tprintf(ipaddr, {ip_cidr=ip_cidr}) .. "\n"
       end
     end
     
@@ -219,9 +226,9 @@ ${whitelist}
     end
     if options.blacklist ~= '' then options.blacklist = "BlockedMACList " .. options.blacklist end
     
-    local new_conf = printf(new_conf_tmpl, options)
+    local new_conf = cutil.tprintf(new_conf_tmpl, options)
     if not nixio.fs.writefile("/etc/nodogsplash/nodogsplash.conf",new_conf) then
-      DIE("splash: failed to write nodogsplash.conf")
+      dispatch.error500("splash: failed to write nodogsplash.conf")
     end
     
     luci.http.redirect(".")
