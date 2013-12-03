@@ -11,15 +11,20 @@
 
 <div style="width:100%">
 
+<% require "luci.model.ipkg"
+if luci.model.ipkg.installed("commotion-apps") then   %>
 <div style="width:49%;display:inline-block;text-align:center" id="local">
- <a href="<%=server .. splash .. 'redir=' .. newredir .. '%2Fapps&' .. tok%>">
+ <a href="<%=server .. splash .. 'redir=' .. newredir .. '%2Fapps&amp;' .. tok%>">
   <img src="<%=media%>/apps.128.png" alt="<%:Local Applications%>" title="<%:Local Applications%>" />
   <p><%:Local Applications%></p>
  </a>
 </div>
 
+<% end %>
+
+
 <div style="width:49%;display:inline-block;text-align:center" id="internet">
- <a href="<% require "luci.http" %><%= luci.http.formvalue("authtarget") %>">
+ <a href="<% require "luci.http" %><%=server .. splash .. redir .. '&amp;' .. tok%>">
   <img src="<%=media%>/internet.128.png" alt="<%:Internet%>" title="<%:Internet%>" />
   <p><%:Internet%></p>
  </a>
