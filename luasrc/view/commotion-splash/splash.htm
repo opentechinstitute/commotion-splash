@@ -1,6 +1,6 @@
 <%+header%>
 
-<%+commotion-splash/splashtext%>
+<%#commotion-splash/splashtext%>
 
 <% require "luci.http"
    local authtarget=luci.http.formvalue("authtarget")
@@ -9,36 +9,37 @@
    newredir = newredir:gsub(":","#3A"):gsub("/","#2F"):gsub("#","%%")
 %>
 
-<script type="application/javascript">
-   Zepto(function($) {
-      $('#internet').on('click', function(e) {
-         e.preventDefault();
-         $.ajax({
-	    url: "<%=server .. splash .. redir .. '&amp;' .. tok%>",
-            success: function() {
-               location.href="<%=redir%>";
-            }
-         });
-      });
-   });
-</script>
-
-
 <div style="width:100%">
 
+<% require "luci.model.ipkg"
+if luci.model.ipkg.installed("luci-commotion-apps") then   %>
 <div style="width:49%;display:inline-block;text-align:center" id="local">
- <a href="<%=server .. splash .. 'redir=' .. newredir .. '%2Fapps&' .. tok%>">
+ <a href="<%=server .. splash .. 'redir=' .. newredir .. '%2Fapps&amp;' .. tok%>">
   <img src="<%=media%>/apps.128.png" alt="<%:Local Applications%>" title="<%:Local Applications%>" />
   <p><%:Local Applications%></p>
  </a>
 </div>
 
-<div style="width:49%;display:inline-block;text-align:center" id="internet"> 
-  <a href="<% require "luci.http" %><%= luci.http.formvalue("authtarget") %>">
+<% end %>
+
+
+<div style="width:49%;display:inline-block;text-align:center" id="internet">
+ <a href="<% require "luci.http" %><%=server .. splash .. redir .. '&amp;' .. tok%>">
   <img src="<%=media%>/internet.128.png" alt="<%:Internet%>" title="<%:Internet%>" />
   <p><%:Internet%></p>
  </a>
 </div>
+
+<%-              
+uri = REQUEST_URI                                                       
+uri_prefix, num_post = string.gsub(uri, "splash_*", "splash_submit")
+-%>
+
+<form name="go" action="<%=uri_prefix%>" enctype="multipart/form-data" method="POST">
+<input type=hidden" name="authtarget" value='<%=authtarget%>' />
+<input type=hidden" name="redir" value="<%=redir%>" />
+<input type="submit" name="submit" />
+</form>
 
 </div>
 

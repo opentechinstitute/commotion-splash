@@ -11,6 +11,24 @@ function index()
 	entry({"admin", "services", "splash", "splashtext" }, form("commotion-splash/splashtext"), _("Splashtext"), 10).dependent=true
 	entry({"admin", "services", "splash", "submit" }, call("config_submit")).dependent=true
 	entry({"commotion","splash"}, template("commotion-splash/splash")).dependent=false
+	entry({"commotion","splash_submit"}, call("auth_pause"))
+end
+
+function auth_pause()
+  -- wait for nodogsplash to auth client before redirecting to webpage
+  local debug = require "luci.commotion.debugger"
+  local values = luci.http.formvalue()
+  local server, splash, redir, tok = values["authtarget"]:match("(http://[^:]+)([:%d]*/.*)(redir=.*)&(tok=.*)")
+  local auth = server .. splash .. tok
+  redir = luci.http.urldecode(string.gsub(redir,'redir=',''))
+  local get = luci.sys.httpget(auth)
+  debug.log(luci.http.getenv())
+  if (get) then
+    for variable = 0, 10, 1 do
+      -- just an empty loop to kill time without blocking
+    end
+    luci.http.redirect(redir)
+  end
 end
 
 function config_splash(error_info, bad_settings)
