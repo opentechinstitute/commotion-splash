@@ -108,7 +108,12 @@ function config_submit()
   end
   
   if settings.redirecturl and settings.redirecturl ~= '' then
-    settings.redirecturl = encode.url(settings.redirecturl)
+    if string.match(settings.redirecturl, "http[s?]://") then
+      settings.redirecturl = encode.url(settings.redirecturl)
+    else
+      settings.redirecturl = 'http://' .. settings.redirecturl
+      settings.redirecturl = encode.url(settings.redirecturl)
+    end
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
