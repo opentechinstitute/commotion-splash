@@ -15,7 +15,6 @@ end
 
 function config_splash(error_info, bad_settings)
   local splash
-  local debug = require "luci.commotion.debugger"
   local encode = require "luci.commotion.encode"
   local ntwrk = require "luci.commotion.network"
   -- get settings
@@ -60,7 +59,6 @@ function config_splash(error_info, bad_settings)
     
     local ipaddrs_str = luci.sys.exec("grep -o -E '^[^#]*FirewallRule allow from .* #FirewallRule preauthenticated-users' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 4")
     for ipaddr in ipaddrs_str:gmatch("[^%s]+") do
-      debug.log(ipaddr)
       ipaddr = encode.html(ipaddr)
       table.insert(splash.ipaddrs,ipaddr)
     end
@@ -108,7 +106,12 @@ function config_submit()
   end
   
   if settings.redirecturl and settings.redirecturl ~= '' then
-    settings.redirecturl = encode.url(settings.redirecturl)
+    if string.match(settings.redirecturl, "http[s]?://") then
+      settings.redirecturl = encode.url(settings.redirecturl)
+    else
+      settings.redirecturl = 'http://' .. settings.redirecturl
+      settings.redirecturl = encode.url(settings.redirecturl)
+    end
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
