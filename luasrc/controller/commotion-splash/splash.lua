@@ -57,7 +57,7 @@ function config_splash(error_info, bad_settings)
       table.insert(splash.blacklist,mac)
     end
     
-    local ipaddrs_str = luci.sys.exec("grep -o -E '^[^#]*FirewallRule allow from .* #FirewallRule preauthenticated-users' /etc/nodogsplash/nodogsplash.conf |cut -d ' ' -f 4")
+    local ipaddrs_str = luci.sys.exec("grep -o -E '^[^#]*FirewallRule allow from .* #FirewallRule preauthenticated-users' /etc/nodogsplash/nodogsplash.conf | sed 's/^ *//' | cut -d ' ' -f 4")
     for ipaddr in ipaddrs_str:gmatch("[^%s]+") do
       ipaddr = encode.html(ipaddr)
       table.insert(splash.ipaddrs,ipaddr)
