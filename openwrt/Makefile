@@ -1,17 +1,14 @@
 include $(TOPDIR)/rules.mk
 
-MODULE_NAME:=commotion-splash
-MODULE_TITLE:=Commotion-Splash
-
 THEME_NAME:=commotion
 THEME_TITLE:=Commotion
 
-PKG_NAME:=$(MODULE_NAME)
+PKG_NAME:=luci-commotion-splash
 PKG_VERSION:=master
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git://github.com/danstaples/commotion-splash.git
+PKG_SOURCE_URL:=git://github.com/opentechinstitute/luci-commotion-splash.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
@@ -23,7 +20,8 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
   SECTION:=commotion
   CATEGORY:=Commotion
-  DEPENDS:=+nodogsplash
+  SUBMENU:=User Interface
+  DEPENDS:=+nodogsplash +luci-mod-commotion +lua-helpers-encode +lua-helpers-util +lua-helpers-debugger +lua-helpers-identify +lua-helpers-network
   TITLE:=Commotion Captive Portal
   URL:=https://commotionwireless.net
 endef
