@@ -90,14 +90,14 @@ function config_submit()
     elseif type(luci.http.formvalue("cbid.commotion-splash." .. opt)) == "table" then
       settings[opt] = luci.http.formvalue("cbid.commotion-splash." .. opt)
     else
-      dispatch.error500(translate("splash: invalid parameters"))
+      dispatch.error500(translate("Welcome Page: invalid parameters"))
       return
     end
   end
   
   --input validation and sanitization
   if (not settings.leasetime or settings.leasetime == '' or not id.is_uint(settings.leasetime)) then
-    error_info.leasetime = translate("Clearance time must be an integer greater than zero")
+    error_info.leasetime = translate("Time must be entered as an integer greater than zero")
   end
   
   if settings.redirect and settings.redirect ~= "1" then
@@ -115,26 +115,26 @@ function config_submit()
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
-    dispatch.error500(translate("Invalid autoauth"))
+    dispatch.error500(translate("Invalid automatice authentication"))
     return
   end
   
   for _, selected_zone in pairs(settings.selected_zones) do
     if selected_zone and selected_zone ~= "" and not list.zone_to_iface[selected_zone] then
-      dispatch.error500(translate("Invalid submission...zone ") .. selected_zone .. translate(" doesn't exist"))
+      dispatch.error500(translate("Invalid submission: zone ") .. selected_zone .. translate(" doesn't exist"))
       return
     end
   end
   
   for _, mac in pairs(settings.whitelist) do
     if mac and mac ~= "" and not id.is_macaddr(mac) then
-      error_info.whitelist = translate("Whitelist entries must be a valid MAC address")
+      error_info.whitelist = translate("Whitelist entries must be valid MAC addresses")
     end
   end
   
   for _, mac in pairs(settings.blacklist) do
     if mac and mac ~= "" and not id.is_macaddr(mac) then
-      error_info.blacklist = translate("Blacklist entries must be a valid MAC address")
+      error_info.blacklist = translate("Ban entries must be valid MAC addresses")
     end
   end
   
