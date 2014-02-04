@@ -74,7 +74,9 @@ function config_submit()
   local list = ntwrk.list_ifaces()
   local encode = require "luci.commotion.encode"
   local cutil = require "luci.commotion.util"
-  local id = require "luci.commotion.identify"
+  local validate = require "luci.commotion.validate"
+  local dt = require "luci.cbi.datatypes"
+  local ip = require "luci.ip"
   local dispatch = require "luci.dispatcher"
   local settings = {
     leasetime = luci.http.formvalue("cbid.commotion-splash.leasetime"),
@@ -96,7 +98,7 @@ function config_submit()
   end
   
   --input validation and sanitization
-  if (not settings.leasetime or settings.leasetime == '' or not id.is_uint(settings.leasetime)) then
+  if (not settings.leasetime or settings.leasetime == '' or not dt.uinteger(settings.leasetime) or tonumber(settings.leasetime) <= 0) then
     error_info.leasetime = translate("Time must be entered as an integer greater than zero")
   end
   
@@ -127,21 +129,19 @@ function config_submit()
   end
   
   for _, mac in pairs(settings.whitelist) do
-    if mac and mac ~= "" and not id.is_macaddr(mac) then
+    if mac and mac ~= "" and not dt.macaddr(mac) then
       error_info.whitelist = translate("Whitelist entries must be valid MAC addresses")
     end
   end
   
   for _, mac in pairs(settings.blacklist) do
-    if mac and mac ~= "" and not id.is_macaddr(mac) then
+    if mac and mac ~= "" and not dt.macaddr(mac) then
       error_info.blacklist = translate("Ban entries must be valid MAC addresses")
     end
   end
   
   for _, ipaddr in pairs(settings.ipaddrs) do
-    if ipaddr and ipaddr ~= "" and id.is_ip4addr_cidr(ipaddr) then
-      range = true
-    elseif ipaddr and ipaddr ~= "" and not id.is_ip4addr(ipaddr) then
+    if ipaddr and ipaddr ~= "" and not ip.IPv4(ipaddr) then
       error_info.ipaddrs = translate("Entry must be a valid IPv4 address or address range in CIDR notation")
     end
   end
