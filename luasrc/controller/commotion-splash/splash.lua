@@ -92,18 +92,18 @@ function config_submit()
     elseif type(luci.http.formvalue("cbid.commotion-splash." .. opt)) == "table" then
       settings[opt] = luci.http.formvalue("cbid.commotion-splash." .. opt)
     else
-      dispatch.error500(translate("Welcome Page: invalid parameters"))
+      dispatch.error500(luci.i18n.translate("Welcome Page: invalid parameters"))
       return
     end
   end
   
   --input validation and sanitization
   if (not settings.leasetime or settings.leasetime == '' or not dt.uinteger(settings.leasetime) or tonumber(settings.leasetime) <= 0) then
-    error_info.leasetime = translate("Time must be entered as an integer greater than zero")
+    error_info.leasetime = luci.i18n.translate("Time must be entered as an integer greater than zero")
   end
   
   if settings.redirect and settings.redirect ~= "1" then
-    dispatch.error500(translate("Invalid redirect"))
+    dispatch.error500(luci.i18n.translate("Invalid redirect"))
     return
   end
   
@@ -117,32 +117,32 @@ function config_submit()
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
-    dispatch.error500(translate("Invalid automatice authentication"))
+    dispatch.error500(luci.i18n.translate("Invalid automatice authentication"))
     return
   end
   
   for _, selected_zone in pairs(settings.selected_zones) do
     if selected_zone and selected_zone ~= "" and not list.zone_to_iface[selected_zone] then
-      dispatch.error500(translate("Invalid submission: zone ") .. selected_zone .. translate(" doesn't exist"))
+      dispatch.error500(luci.i18n.translate("Invalid submission: zone ") .. selected_zone .. luci.i18n.translate(" doesn't exist"))
       return
     end
   end
   
   for _, mac in pairs(settings.whitelist) do
     if mac and mac ~= "" and not dt.macaddr(mac) then
-      error_info.whitelist = translate("Whitelist entries must be valid MAC addresses")
+      error_info.whitelist = luci.i18n.translate("Whitelist entries must be valid MAC addresses")
     end
   end
   
   for _, mac in pairs(settings.blacklist) do
     if mac and mac ~= "" and not dt.macaddr(mac) then
-      error_info.blacklist = translate("Ban entries must be valid MAC addresses")
+      error_info.blacklist = luci.i18n.translate("Ban entries must be valid MAC addresses")
     end
   end
   
   for _, ipaddr in pairs(settings.ipaddrs) do
     if ipaddr and ipaddr ~= "" and not ip.IPv4(ipaddr) then
-      error_info.ipaddrs = translate("Entry must be a valid IPv4 address or address range in CIDR notation")
+      error_info.ipaddrs = luci.i18n.translate("Entry must be a valid IPv4 address or address range in CIDR notation")
     end
   end
   
@@ -153,7 +153,7 @@ function config_submit()
     for zone, iface in pairs(list.zone_to_iface) do
       table.insert(settings.zones,zone)
     end
-    error_info.notice = translate("Invalid entries. Please review the fields below.")
+    error_info.notice = luci.i18n.translate("Invalid entries. Please review the fields below.")
     config_splash(error_info, settings)
     return
   else
