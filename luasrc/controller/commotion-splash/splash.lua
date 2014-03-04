@@ -117,7 +117,7 @@ function config_submit()
   end
   
   if settings.autoauth and settings.autoauth ~= "1" then
-    dispatch.error500(luci.i18n.translate("Invalid automatice authentication"))
+    dispatch.error500(luci.i18n.translate("Invalid automatic authentication"))
     return
   end
   
