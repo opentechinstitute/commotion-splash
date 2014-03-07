@@ -59,7 +59,7 @@ whitelist = m:section(NamedSection, "whitelist", "MACList", translate("WHITELIST
 wlOn = whitelist:option(Flag, "wlOn")
 wlMacs = whitelist:option(DynamicList, "mac", translate("MAC Address"))
 wlMacs:depends("wlOn", 1)
-wlMacs.placeholder = "06-00-00-00-00-00"
+wlMacs.placeholder = "00:00:00:00:00:00"
 function wlMacs:validate(val)
    if val and next(val) then
 	  for _,mac in ipairs(val) do
@@ -78,8 +78,8 @@ blacklist = m:section(NamedSection, "blacklist", "MACList", translate("BANNED"),
 blOn = blacklist:option(Flag, "blOn")
 blMacs = blacklist:option(DynamicList, "mac", translate("MAC Address"))
 blMacs:depends("blOn", 1)
-blMacs.placeholder = "06-00-00-00-00-00"
-blMacs.default = "06-00-00-00-00-00"
+blMacs.placeholder = "00:00:00:00:00:00"
+blMacs.default = "00:00:00:00:00:00"
 function blMacs:validate(val)
    if val and next(val) then
 	  for _,mac in ipairs(val) do 
