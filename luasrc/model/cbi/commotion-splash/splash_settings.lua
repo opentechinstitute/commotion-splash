@@ -26,9 +26,6 @@ local cvd = require "luci.commotion.validate"
 
 m = Map("nodogsplash", translate("Welcome Page"))
 
---redirect on saved and changed to check changes.
-m.on_after_save = ccbi.conf_page
-
 enable = m:section(TypedSection, "settings", translate("On/Off"), translate("Users can be redirected to a “welcome page” when they first connect to this node."))
 enable.anonymous = true
 
