@@ -136,7 +136,7 @@ tfield = stime:option(Value, "splashtime")
 tfield.datatype = "uinteger"
 tfield.forcewrite = true
 
-timeopt = stime:option(DynamicList, "splashunit")
+timeopt = stime:option(ListValue, "splashunit")
 timeopt:value("minutes")
 timeopt:value("hours")
 timeopt:value("days")

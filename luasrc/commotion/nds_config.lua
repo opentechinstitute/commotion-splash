@@ -111,7 +111,7 @@ function NDSConfig:getUci(uciConfig)
 				  --Add user created firewall rules
 				  if s.UsrFirewallRule and next(s.UsrFirewallRule) then
 					 for _,rule in ipairs(s.UsrFirewallRule) do
-						table.insert(config, "  FirewallRule "..rule)
+						table.insert(config, "  FirewallRule allow "..rule)
 					 end
 				  end
 				  --close firewall set
@@ -122,13 +122,17 @@ function NDSConfig:getUci(uciConfig)
    -- get whitelists
    local wlist = uci:get_list(uciConfig, "whitelist", "mac")
    wMacs = table.concat(wlist, ",")
-   table.insert(config, "TrustedMACList "..wMacs)
-   table.insert(config, "\n")
+   if wMacs ~= ''then
+	  table.insert(config, "TrustedMACList "..wMacs)
+	  table.insert(config, "\n")
+   end
    -- get blacklists
    local blist = uci:get_list(uciConfig, "blacklist", "mac")
    bMacs = table.concat(blist, ",")
-   table.insert(config, "BlockedMACList "..bMacs)
-   table.insert(config, "\n")
+   if bMacs ~= '' then
+	  table.insert(config, "BlockedMACList "..bMacs)
+	  table.insert(config, "\n")
+   end
    -- get interfaces
    local iface = uci:get(uciConfig, "interfaces", "interface")
    table.insert(config, "GatewayInterface "..iface)
