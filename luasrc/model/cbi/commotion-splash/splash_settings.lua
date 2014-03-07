@@ -42,8 +42,11 @@ homepage = general:option(Value, "redirecturl", translate("Homepage"), translate
 homepage:depends("redirect", 1) --Flags return "" if unchecked and self.enabled if true
 function homepage:validate(val)
    if val then
-	  if uri:new(val) then
-		 return val
+	local v = uri:new(val)
+	  if v then
+		if v._scheme then
+			return val
+		end
 	  else
 		 return nil
 	  end
