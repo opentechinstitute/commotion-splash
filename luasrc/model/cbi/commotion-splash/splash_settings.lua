@@ -96,7 +96,7 @@ end
 --maps to FirewallRuleSet preauthenticated-users
 firewallRules = m:section(NamedSection, "preauthenticated_users", "FirewallRuleSet",  translate("ALLOWED HOSTS/SUBNETS"), translate("Hosts and Networks that are listed here are excluded from splashing, i.e. they are always allowed."))
 fwOn = firewallRules:option(Flag, "fwOn")
-rules = firewallRules:option(DynamicList, "UsrFirewallRule", translate("IP Adress"), translate("CIDR notation optional (e.g. 192.168.1.0/24)"))
+rules = firewallRules:option(DynamicList, "UsrFirewallRule", translate("IP Address"), translate("CIDR notation optional (e.g. 192.168.1.0/24)"))
 rules:depends("fwOn", 1)
 rules.datatype = "ipaddr"
 rules.placeholder = "192.0.2.1"
