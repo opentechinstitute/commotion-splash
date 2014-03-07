@@ -100,7 +100,8 @@ function NDSConfig:getUci(uciConfig)
    uci:foreach(uciConfig, "FirewallRuleSet",
 			   function(s)
 				  --create firewall set header
-				  table.insert(config, s['.type'].." "..s['.name'].." {")
+				  local name = string.gsub(s['.name'], "_", "-") 
+				  table.insert(config, s['.type'].." "..name.." {")
 				  --Add default firewall rules
 				  if s.FirewallRule and next(s.FirewallRule) then
 					 for _,rule in ipairs(s.FirewallRule) do
